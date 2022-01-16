@@ -14,3 +14,8 @@ Examples of commands supported:
 
 a complex example:
 1. echo hello && echo world && grep main sum.c - prints hello world to the console and displays where the text "main" is in sum.c on to the console
+
+Concepts:
+1. C Language
+2. Linux
+3. Computer Systems
