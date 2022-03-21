@@ -1,7 +1,6 @@
 # Mini_Shell
 This program is a collection of C and header files for the implemenation of a Shell. A shell is a program that accepts commands from a user and executes them. 
-This shell implemenation thus far supports file redirection, pipes, and boolean operations with Linux commands on a Linux operating system. The shell will also work with Linux 
-distributions like Ubuntu.
+This shell implemenation thus far supports file redirection, pipes, and boolean operations with Linux commands on a Linux operating system. The shell will also work with Linux distributions like Ubuntu.The shell command prompt is **d8sh%.**
 
 ## Examples of commands supported:
 1. cd - to change directories in the file system
