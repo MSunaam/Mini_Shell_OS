@@ -80,10 +80,10 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
       
       /*touch command*/
       else if (strcmp(t->argv[0], "SSU_touch") == 0){
-      	 /*open file using the 'open' system-call*/
       	 if (t->argv[1]) {
-		  	int new_fd = open(t->argv[1], O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
-		  	if (new_fd == -1) {
+          	/*create file using the 'open' system-call*/
+		  	int result = open(t->argv[1], O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
+		  	if (result == -1) {
 		 	   perror(t->argv[1]);
 		 	   return -1;
 		  	}
@@ -96,6 +96,26 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
       	    return -1;
       	 }
       }
+      
+      /*mkdir command*/
+      else if (strcmp(t->argv[0], "SSU_mkdir") == 0){
+         if (t->argv[1]) {
+          	/*create folder using the 'mkdir' system-call*/
+		  	int result = mkdir(t->argv[1], S_IRWXU);
+		  	if (result == -1) {
+		 	   perror(t->argv[1]);
+		 	   return -1;
+		  	}
+		  	else {
+		  	   return 0;
+		  	}
+      	 }
+      	 else {
+      	    perror(t->argv[0]);
+      	    return -1;
+      	 }
+      }
+
 
       /*process any entered linux commands*/
        if((pid = fork()) < 0){
