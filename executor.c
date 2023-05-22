@@ -52,17 +52,24 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
      /*Check if exit command was entered, exit if it was*/
       if (strcmp(t->argv[0], "exit") == 0){
          exit(0);
-      } 
+      }       
       /*check if user wants to change directory, if so change directory*/
       else if (strcmp(t->argv[0], "cd") == 0){
          
-         if (strlen(t->argv[1]) != 0){
+         if ((t->argv[1])){
             if (chdir(t->argv[1]) == -1){
                perror(t->argv[1]);
+            }else{
+            	return 0;
             }
          }
          else {
-            chdir(getenv("HOME")); /*change to home directory if no argument is provided*/
+            if(chdir(getenv("HOME")) == -1){  /*change to home directory if no argument is provided*/
+            perror(t->argv[0]);
+                        
+            }else{
+            	return 0;
+            }
          }
       }
 
