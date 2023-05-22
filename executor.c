@@ -9,6 +9,7 @@
 #include <unistd.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <sys/stat.h>
 #include <string.h>
 #include <fcntl.h>
 
@@ -17,15 +18,7 @@ static int execute_aux(struct tree *t, int o_input_fd, int p_output_fd);
 
 
 
-int execute(struct tree *t) {
-   execute_aux(t, STDIN_FILENO, STDOUT_FILENO); /*processing the root node first*/
-
-  /* print_tree(t);*/ 
-
-   return 0;
-}
-/*
-static void print_tree(struct tree *t) {
+/*static void print_tree(struct tree *t) {
    if (t != NULL) {
       print_tree(t->left);
 
@@ -39,8 +32,16 @@ static void print_tree(struct tree *t) {
 
       print_tree(t->right);
    }
+}*/
+
+int execute(struct tree *t) {
+   execute_aux(t, STDIN_FILENO, STDOUT_FILENO); /*processing the root node first*/
+
+   /*print_tree(t);*/
+
+   return 0;
 }
-*/
+
 static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
    int pid, status, new_pid, fd, fd2, success_status = 0, failure_status = -1, new_status;
    int pipe_fd[2], pid_1, pid_2;
@@ -52,7 +53,7 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
      /*Check if exit command was entered, exit if it was*/
       if (strcmp(t->argv[0], "exit") == 0){
          exit(0);
-      }       
+      } 
       /*check if user wants to change directory, if so change directory*/
       else if (strcmp(t->argv[0], "cd") == 0){
          
@@ -60,17 +61,35 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
             if (chdir(t->argv[1]) == -1){
                perror(t->argv[1]);
             }else{
-            	return 0;
+               return 0;
             }
          }
          else {
             if(chdir(getenv("HOME")) == -1){  /*change to home directory if no argument is provided*/
-            perror(t->argv[0]);
-                        
+               perror(t->argv[0]);
             }else{
-            	return 0;
+               return 0;
             }
          }
+      }
+      
+      /**** 	CUSTOM COMMANDS 	****/
+      
+      /*touch command*/
+      else if (strcmp(t->argv[0], "SSU_touch") == 0){
+      	 /*open file using the 'open' system-call*/
+      	 if (t->argv[1]) {
+		  	int new_fd = open(t->argv[1], O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
+		  	if (new_fd == -1) {
+		 	   perror(t->argv[1]);
+		  	}
+		  	else {
+		  	   return 0;
+		  	}
+      	 }
+      	 else {
+      	    perror(t->argv[0]);
+      	 }
       }
 
       /*process any entered linux commands*/
@@ -364,4 +383,3 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
  
   return success_status;
 }
-
