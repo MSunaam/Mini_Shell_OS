@@ -60,13 +60,16 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
          if ((t->argv[1])){
             if (chdir(t->argv[1]) == -1){
                perror(t->argv[1]);
-            }else{
+               return -1;
+            }
+            else {
                return 0;
             }
          }
          else {
             if(chdir(getenv("HOME")) == -1){  /*change to home directory if no argument is provided*/
                perror(t->argv[0]);
+               return -1;
             }else{
                return 0;
             }
@@ -82,6 +85,7 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
 		  	int new_fd = open(t->argv[1], O_CREAT | O_WRONLY, S_IRUSR | S_IWUSR);
 		  	if (new_fd == -1) {
 		 	   perror(t->argv[1]);
+		 	   return -1;
 		  	}
 		  	else {
 		  	   return 0;
@@ -89,6 +93,7 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
       	 }
       	 else {
       	    perror(t->argv[0]);
+      	    return -1;
       	 }
       }
 
