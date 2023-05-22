@@ -140,6 +140,20 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
          return new_status;
       }
    }
+   
+   else if(t->conjunction == OR){
+
+      /*Process left subtree, then right subtree if leftsubtree is processed correctly*/ 
+      new_status = execute_aux(t->left, p_input_fd, p_output_fd);
+      
+      /*if the left_subtree failed to process successfully, process the right subtree */
+      if(new_status == 0){      
+         return new_status;
+      }
+      else {
+        return execute_aux(t->right, p_input_fd, p_output_fd);
+      }
+   }
 
    /*of the current conjuction is of type pipe, process*/
    else if(t->conjunction == PIPE){
