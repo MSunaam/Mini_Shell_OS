@@ -143,7 +143,7 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
    
    else if(t->conjunction == OR){
 
-      /*Process left subtree, then right subtree if leftsubtree is processed correctly*/ 
+      /*Process left subtree, then right subtree if leftsubtree failed process correctly*/ 
       new_status = execute_aux(t->left, p_input_fd, p_output_fd);
       
       /*if the left_subtree failed to process successfully, process the right subtree */
@@ -153,6 +153,15 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
       else {
         return execute_aux(t->right, p_input_fd, p_output_fd);
       }
+   }
+   
+   else if(t->conjunction == SEMI){
+
+      /*Process left subtree, then right subtree no-mater if leftsubtree is processed correctly or not*/ 
+      new_status = execute_aux(t->left, p_input_fd, p_output_fd);
+      
+      /*if the left_subtree was processed was succesfully or not, process the right subtree */
+      return execute_aux(t->right, p_input_fd, p_output_fd);
    }
 
    /*of the current conjuction is of type pipe, process*/
