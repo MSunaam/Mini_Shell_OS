@@ -101,7 +101,7 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
       else if (strcmp(t->argv[0], "SSU_mkdir") == 0){
          if (t->argv[1]) {
           	/*create folder using the 'mkdir' system-call*/
-		  	int result = mkdir(t->argv[1], S_IRWXU);
+		    int result = mkdir(t->argv[1], S_IRWXU);
 		  	if (result == -1) {
 		 	   perror(t->argv[1]);
 		 	   return -1;
@@ -114,6 +114,19 @@ static int execute_aux(struct tree *t, int p_input_fd, int p_output_fd) {
       	    perror(t->argv[0]);
       	    return -1;
       	 }
+      }
+      
+      else if (strcmp(t->argv[0], "SSU_echo") == 0){
+         int i = 1;
+         while (t->argv[i] != NULL) {
+            fputs(t->argv[i], stdout);
+            if (t->argv[i + 1] != NULL) {
+                putchar(' ');
+            }
+            i++;
+         }
+         putchar('\n');
+         return 0;
       }
 
 
